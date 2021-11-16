@@ -72,10 +72,12 @@ axios({
 axios({
     method: 'post',
     url: '/base/post',
+    responseType: 'json',
     data: {
-        a: 1,
-        b: 2
+        name: 'zhuting'
     }
+}).then((res) => {
+    console.log(res)
 })
 
 const arr = new Int32Array([21, 31])
