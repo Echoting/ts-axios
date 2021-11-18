@@ -19,6 +19,13 @@ axios({
     }
 })
 
+axios('/extend/post', {
+    method: 'post',
+    data: {
+        msg: 'hello'
+    }
+})
+
 axios.request({
     url: '/extend/post',
     method: 'post',
@@ -49,6 +56,7 @@ function getUser<T>() {
         .catch(error => console.error(error))
 }
 
+// 增加接口泛型
 async function test() {
     const user = await getUser<User>()
     if (user) {

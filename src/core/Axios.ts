@@ -2,14 +2,17 @@ import { AxiosRequestConfig, AxiosPromise, Method } from '../types'
 import dispatchRequest from '../core/dispatchRequest'
 
 export default class Axios {
-    request(url: any, config?: any): AxiosPromise {
-        if (typeof url === 'string') {
+    // 接口重载
+    // 支持 axios(config) 或者 axios(url, config)
+    request(urlOrConfig: any, config?: any): AxiosPromise {
+        // 说明传入了url
+        if (typeof urlOrConfig === 'string') {
             if (!config) {
                 config = {}
             }
-            config.url = url
+            config.url = urlOrConfig
         } else {
-            config = url
+            config = urlOrConfig
         }
         return dispatchRequest(config as AxiosRequestConfig)
     }
