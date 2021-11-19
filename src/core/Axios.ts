@@ -1,7 +1,34 @@
-import { AxiosRequestConfig, AxiosPromise, Method } from '../types'
+import {
+    AxiosRequestConfig,
+    AxiosPromise,
+    Method,
+    ResolveFn,
+    RejectFn,
+    AxiosResponse
+} from '../types'
 import dispatchRequest from '../core/dispatchRequest'
+import InterceptorManager from './InterceptorManager'
+
+interface Interceptors {
+    request: InterceptorManager<AxiosRequestConfig>
+    response: InterceptorManager<AxiosResponse>
+}
+
+interface InterceptorPromiseChain {
+    resolve: ResolveFn | ((config: AxiosRequestConfig) => AxiosPromise)
+    reject?: RejectFn
+}
 
 export default class Axios {
+    interceptors: Interceptors
+
+    constructor() {
+        this.interceptors = {
+            request: new InterceptorManager<AxiosRequestConfig>(),
+            response: new InterceptorManager<AxiosResponse>()
+        }
+    }
+
     // 接口重载
     // 支持 axios(config) 或者 axios(url, config)
     request(urlOrConfig: any, config?: any): AxiosPromise {
@@ -14,7 +41,40 @@ export default class Axios {
         } else {
             config = urlOrConfig
         }
-        return dispatchRequest(config as AxiosRequestConfig)
+
+        let chain: InterceptorPromiseChain[] = [
+            {
+                resolve: dispatchRequest,
+                // resolve: () => {
+                //     let test = dispatchRequest(config as AxiosRequestConfig)
+                //     test.then(res => {
+                //         console.log(123, res)
+                //         return res
+                //     })
+                //     return test
+                // },
+                reject: undefined
+            }
+        ]
+
+        this.interceptors.request.forEach(interceptor => {
+            chain.unshift(interceptor)
+        })
+
+        this.interceptors.response.forEach(interceptor => {
+            chain.push(interceptor)
+        })
+
+        let promise = Promise.resolve(config)
+
+        while (chain.length > 0) {
+            const { resolve, reject } = chain.shift()!
+
+            promise = promise.then(resolve, reject)
+        }
+
+        return promise
+        // return dispatchRequest(config as AxiosRequestConfig)
     }
 
     get(url: string, config?: AxiosRequestConfig): AxiosPromise {

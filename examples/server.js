@@ -34,6 +34,7 @@ handleSimpleRouter()
 handleBaseRouter()
 handleErrorRouter()
 handleExtendRouter()
+handelInterceptorRouter()
 
 app.use(router)
 
@@ -139,4 +140,12 @@ function handleExtendRouter() {
         })
     })
 
+}
+
+function handelInterceptorRouter() {
+    router.get('/interceptor/get', function(req, res) {
+        res.json({
+            msg: 'hello world'
+        })
+    })
 }
