@@ -35,6 +35,7 @@ handleBaseRouter()
 handleErrorRouter()
 handleExtendRouter()
 handelInterceptorRouter()
+handelConfigRouter()
 
 app.use(router)
 
@@ -147,5 +148,11 @@ function handelInterceptorRouter() {
         res.json({
             msg: 'hello world'
         })
+    })
+}
+
+function handelConfigRouter() {
+    router.post('/config/post', function(req, res) {
+        res.json(req.body)
     })
 }
