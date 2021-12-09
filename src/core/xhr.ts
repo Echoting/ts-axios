@@ -12,7 +12,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
             headers,
             responseType,
             timeout,
-            cancelToken
+            cancelToken,
+            withCredentials
         } = config
         const request = new XMLHttpRequest()
         request.open(method.toUpperCase(), url!, true)
@@ -28,6 +29,11 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
         if (timeout) {
             request.timeout = timeout
+        }
+
+        // 设置跨域携带cookie
+        if (withCredentials) {
+            request.withCredentials = withCredentials
         }
 
         request.onreadystatechange = () => {
