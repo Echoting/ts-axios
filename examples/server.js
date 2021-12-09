@@ -36,6 +36,7 @@ handleErrorRouter()
 handleExtendRouter()
 handelInterceptorRouter()
 handelConfigRouter()
+handleCancelRouter()
 
 app.use(router)
 
@@ -154,5 +155,19 @@ function handelInterceptorRouter() {
 function handelConfigRouter() {
     router.post('/config/post', function(req, res) {
         res.json(req.body)
+    })
+}
+
+function handleCancelRouter() {
+    router.get('/cancel/get', function (req, res) {
+        setTimeout(() => {
+            res.json(req.body)
+        }, 1000)
+    })
+
+    router.post('/cancel/post', function (req, res) {
+        setTimeout(() => {
+            res.json(req.body)
+        }, 1000)
     })
 }

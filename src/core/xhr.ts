@@ -11,7 +11,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
             params = null,
             headers,
             responseType,
-            timeout
+            timeout,
+            cancelToken
         } = config
         const request = new XMLHttpRequest()
         request.open(method.toUpperCase(), url!, true)
@@ -67,6 +68,14 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
                     request
                 )
             )
+        }
+
+        // 取消功能
+        if (cancelToken) {
+            cancelToken.promise.then(reason => {
+                request.abort()
+                reject(reason)
+            })
         }
 
         function handleResponse(response: AxiosResponse) {
