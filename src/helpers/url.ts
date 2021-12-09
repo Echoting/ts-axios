@@ -1,5 +1,10 @@
 import { isDate, isPlainObject } from './utils'
 
+interface URLOrigin {
+    protocol: string
+    host: string
+}
+
 // 对于字符 @、:、$、,、、[、]，我们是允许出现在 url 中的，不希望被 encode
 function encode(value: string): string {
     return encodeURIComponent(value)
@@ -69,4 +74,24 @@ export function buildURL(url: string, params?: any): string {
     }
 
     return url
+}
+
+// 判断是否是一个同源的url
+// 通过创建一个a标签，拿到协议和域名
+export function isURLSameOrigin(requesetURL: string): boolean {
+    const currentUrl = resolveURL(window.location.href)
+    const parsingUrl = resolveURL(requesetURL)
+
+    return currentUrl.protocol === parsingUrl.protocol && currentUrl.host === parsingUrl.host
+
+    function resolveURL(url: string): URLOrigin {
+        const urlNode = document.createElement('a')
+        urlNode.setAttribute('href', url)
+
+        const { host, protocol } = urlNode
+        return {
+            host,
+            protocol
+        }
+    }
 }
