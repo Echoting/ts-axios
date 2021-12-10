@@ -1,10 +1,12 @@
 const express = require('express')
+const path = require('path')
 const bodyParser = require('body-parser')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
 const cookieParser = require('cookie-parser')
+const multipart = require('connect-multiparty')
 
 // require('./server2')
 
@@ -25,6 +27,11 @@ app.use(express.static(__dirname, {
         res.cookie('XSRF-TOKEN-D', '1234abc')
     }
 }))
+
+app.use(multipart({
+    uploadDir: path.resolve(__dirname, 'upload-file')
+}))
+
 app.use(express.static(__dirname))
 
 app.use(bodyParser.json())
@@ -185,5 +192,10 @@ function handleCancelRouter() {
 function handleMoreRouter() {
     router.get('/more/get', function (req, res) {
         res.json(req.cookies)
+    })
+
+    router.post('/more/upload', function(req, res) {
+        console.log(req.body, req.files)
+        res.end('upload success!')
     })
 }
