@@ -15,14 +15,14 @@ import 'nprogress/nprogress.css'
 //     console.log(res)
 // })
 
-// const instance = axios.create({
-//     xsrfCookieName: 'XSRF-TOKEN-D',
-//     xsrfHeaderName: 'X-XSRF-TOKEN-D'
-// })
+const instance = axios.create({
+    xsrfCookieName: 'XSRF-TOKEN-D',
+    xsrfHeaderName: 'X-XSRF-TOKEN-D'
+})
 
-// instance.get('/more/get').then(res => {
-//     console.log(res)
-// })
+instance.get('/more/get').then(res => {
+    console.log(res)
+})
 
 const instance = axios.create()
 
@@ -80,4 +80,15 @@ uploadEl!.addEventListener('click', e => {
         console.log(333, data)
         instance.post('/more/upload', data)
     }
+})
+
+axios.post('/more/post', {
+    a: 1
+}, {
+    auth: {
+        username: 'Yee',
+        password: '123456'
+    }
+}).then(res => {
+    console.log(res)
 })

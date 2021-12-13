@@ -20,7 +20,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
             xsrfCookieName,
             xsrfHeaderName,
             onDownloadProgress,
-            onUploadProgress
+            onUploadProgress,
+            auth
         } = config
         const request = new XMLHttpRequest()
         request.open(method.toUpperCase(), url!, true)
@@ -99,15 +100,6 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         }
 
         function processHeaders(): void {
-            Object.keys(headers).forEach(headerName => {
-                // 如果data为null，就不需要设置content-type了 没有意义
-                if (data === null && headerName.toLowerCase() === 'content-type') {
-                    delete headers[name]
-                } else {
-                    request.setRequestHeader(headerName, headers[headerName])
-                }
-            })
-
             // xsrf防御
             // xsrf防御方法：每次访问站点的时候，服务端通过set-cookie 的方式将token种到客户端
             // 然后客户端发送请求的时候，从 cookie 中对应的字段读取出 token，然后添加到请求 headers 中
@@ -122,6 +114,22 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
             if (isFormData(data)) {
                 delete headers['Content-Type']
             }
+
+            if (auth) {
+                // axios 库也允许你在请求配置中配置 auth 属性，auth 是一个对象结构，包含 username 和 password 2 个属性。
+                // 一旦用户在请求的时候配置这俩属性，我们就会自动往 HTTP 的 请求 header 中添加 Authorization 属性，
+                // 它的值为 Basic 加密串。 这里的加密串是 username:password base64 加密后的结果。
+                headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password)
+            }
+
+            Object.keys(headers).forEach(headerName => {
+                // 如果data为null，就不需要设置content-type了 没有意义
+                if (data === null && headerName.toLowerCase() === 'content-type') {
+                    delete headers[name]
+                } else {
+                    request.setRequestHeader(headerName, headers[headerName])
+                }
+            })
         }
 
         function processCancel(): void {

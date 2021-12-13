@@ -13,7 +13,7 @@ export default function mergeConfig(
     }
 
     const strategyKeysFromValue2 = ['url', 'params', 'data']
-    const strategyKeysDeepMerge = ['headers']
+    const strategyKeysDeepMerge = ['headers', 'auth']
 
     strategyKeysFromValue2.forEach(key => {
         strategyMap[key] = mergeStrategyKeysFromValue2
