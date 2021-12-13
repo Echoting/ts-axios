@@ -107,3 +107,15 @@ export function isURLSameOrigin(requesetURL: string): boolean {
         }
     }
 }
+
+// 判断是不是绝对路径
+export function isAbsoluteURL(url: string): boolean {
+    return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+}
+
+// 拼接baseURL
+export function combineURL(baseURL: string, relativeURL?: string): string {
+    return relativeURL
+        ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
+        : baseURL
+}

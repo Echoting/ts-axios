@@ -139,3 +139,11 @@ axios.get('/more/get', {
 }).then(res => {
     console.log(res)
 })
+
+const baseUrlInstance = axios.create({
+    baseURL: 'https://code.jquery.com/'
+})
+
+baseUrlInstance.get('/jquery-3.6.0.min.js')
+
+baseUrlInstance.get('https://code.jquery.com/jquery-3.6.0.min.js')
