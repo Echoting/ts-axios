@@ -219,4 +219,16 @@ function handleMoreRouter() {
             status: 'ok'
         })
     })
+
+    router.get('/more/A', function(req, res) {
+        res.json({
+            status: 'ok'
+        })
+    })
+
+    router.get('/more/B', function(req, res) {
+        res.json({
+            status: 'ok'
+        })
+    })
 }
