@@ -1,4 +1,4 @@
-import axios from '../../src/index'
+import axios, {AxiosError} from '../../src/index'
 
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -15,14 +15,14 @@ import 'nprogress/nprogress.css'
 //     console.log(res)
 // })
 
-const instance = axios.create({
-    xsrfCookieName: 'XSRF-TOKEN-D',
-    xsrfHeaderName: 'X-XSRF-TOKEN-D'
-})
-
-instance.get('/more/get').then(res => {
-    console.log(res)
-})
+// const instance = axios.create({
+//     xsrfCookieName: 'XSRF-TOKEN-D',
+//     xsrfHeaderName: 'X-XSRF-TOKEN-D'
+// })
+//
+// instance.get('/more/get').then(res => {
+//     console.log(res)
+// })
 
 const instance = axios.create()
 
@@ -82,13 +82,29 @@ uploadEl!.addEventListener('click', e => {
     }
 })
 
-axios.post('/more/post', {
-    a: 1
-}, {
-    auth: {
-        username: 'Yee',
-        password: '123456'
+// axios.post('/more/post', {
+//     a: 1
+// }, {
+//     auth: {
+//         username: 'Yee',
+//         password: '123456'
+//     }
+// }).then(res => {
+//     console.log(res)
+// })
+
+axios.get('/more/304').then(res => {
+    console.log('success', res)
+}).catch((e: AxiosError) => {
+    console.log('error', e.message)
+})
+
+axios.get('/more/304', {
+    validateStatus(status) {
+        return status >= 200 && status < 400
     }
 }).then(res => {
-    console.log(res)
+    console.log('success', res)
+}).catch((e: AxiosError) => {
+    console.log('error', e.message)
 })
